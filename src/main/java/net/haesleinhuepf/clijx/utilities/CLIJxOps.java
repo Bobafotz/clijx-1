@@ -124,6 +124,9 @@ import net.haesleinhuepf.clijx.plugins.DivideByGaussianBackground;
 import net.haesleinhuepf.clijx.plugins.GenerateGreyValueCooccurrenceMatrixBox;
 import net.haesleinhuepf.clijx.plugins.GreyLevelAtttributeFiltering;
 import net.haesleinhuepf.clijx.plugins.BinaryFillHolesSliceBySlice;
+import net.haesleinhuepf.clijx.weka.BinaryWekaPixelClassifier;
+import net.haesleinhuepf.clijx.weka.WekaLabelClassifier;
+import net.haesleinhuepf.clijx.weka.GenerateLabelFeatureImage;
 // this is generated code. See src/test/java/net/haesleinhuepf/clijx/codegenerator for details
 public abstract interface CLIJxOps {
    CLIJ getCLIJ();
@@ -429,6 +432,8 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Applies Gaussian blur to the input image and subtracts the result from the original image.
+     * 
+     * Deprecated: Use topHat() or differenceOfGaussian() instead.
      */
     default boolean subtractBackground(ClearCLImageInterface arg1, ClearCLImageInterface arg2, double arg3, double arg4) {
         if (doTimeTracing()) {recordMethodStart("SubtractBackground2D");}
@@ -439,6 +444,8 @@ public abstract interface CLIJxOps {
 
     /**
      * Applies Gaussian blur to the input image and subtracts the result from the original image.
+     * 
+     * Deprecated: Use topHat() or differenceOfGaussian() instead.
      */
     default boolean subtractBackground2D(ClearCLImageInterface arg1, ClearCLImageInterface arg2, double arg3, double arg4) {
         if (doTimeTracing()) {recordMethodStart("SubtractBackground2D");}
@@ -452,6 +459,8 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Applies Gaussian blur to the input image and subtracts the result from the original image.
+     * 
+     * Deprecated: Use topHat() or differenceOfGaussian() instead.
      */
     default boolean subtractBackground(ClearCLImageInterface arg1, ClearCLImageInterface arg2, double arg3, double arg4, double arg5) {
         if (doTimeTracing()) {recordMethodStart("SubtractBackground3D");}
@@ -462,6 +471,8 @@ public abstract interface CLIJxOps {
 
     /**
      * Applies Gaussian blur to the input image and subtracts the result from the original image.
+     * 
+     * Deprecated: Use topHat() or differenceOfGaussian() instead.
      */
     default boolean subtractBackground3D(ClearCLImageInterface arg1, ClearCLImageInterface arg2, double arg3, double arg4, double arg5) {
         if (doTimeTracing()) {recordMethodStart("SubtractBackground3D");}
@@ -670,8 +681,12 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Performs connected components analysis to a binary image and generates a label map.
+     * 
+     * Deprecated: Use connectedComponentsLabelingBox() instead.
      */
+    @Deprecated
     default boolean connectedComponentsLabelingInplace(ClearCLBuffer binary_source_labeling_destination) {
+        System.out.println("connectedComponentsLabelingInplace is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("ConnectedComponentsLabelingInplace");}
         boolean result = ConnectedComponentsLabelingInplace.connectedComponentsLabelingInplace(getCLIJx(), binary_source_labeling_destination);
         if (doTimeTracing()) {recordMethodEnd("ConnectedComponentsLabelingInplace");}
@@ -686,8 +701,12 @@ public abstract interface CLIJxOps {
      * the GPU to create binary images as similar as possible to ImageJ 'Apply Threshold' method. Enter one 
      * of these methods in the method text field:
      * [Default, Huang, Intermodes, IsoData, IJ_IsoData, Li, MaxEntropy, Mean, MinError, Minimum, Moments, Otsu, Percentile, RenyiEntropy, Shanbhag, Triangle, Yen]
+     * 
+     * Deprecated: Use threshold* instead.
      */
+    @Deprecated
     default boolean automaticThresholdInplace(ClearCLBuffer input_and_destination, String method) {
+        System.out.println("automaticThresholdInplace is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("AutomaticThresholdInplace");}
         boolean result = AutomaticThresholdInplace.automaticThresholdInplace(getCLIJx(), input_and_destination, method);
         if (doTimeTracing()) {recordMethodEnd("AutomaticThresholdInplace");}
@@ -701,8 +720,12 @@ public abstract interface CLIJxOps {
      * Applies Gaussian blur to the input image twice with different sigma values resulting in two images which are then subtracted from each other.
      * 
      * It is recommended to apply this operation to images of type Float (32 bit) as results might be negative.
+     * 
+     * Deprecated: Use differenceOfGaussian3D instead.
      */
+    @Deprecated
     default boolean differenceOfGaussianInplace3D(ClearCLBuffer arg1, double arg2, double arg3, double arg4, double arg5, double arg6, double arg7) {
+        System.out.println("differenceOfGaussianInplace3D is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("DifferenceOfGaussianInplace3D");}
         boolean result = DifferenceOfGaussianInplace3D.differenceOfGaussianInplace3D(getCLIJ(), arg1, new Double (arg2).floatValue(), new Double (arg3).floatValue(), new Double (arg4).floatValue(), new Double (arg5).floatValue(), new Double (arg6).floatValue(), new Double (arg7).floatValue());
         if (doTimeTracing()) {recordMethodEnd("DifferenceOfGaussianInplace3D");}
@@ -716,8 +739,12 @@ public abstract interface CLIJxOps {
      * Computes the absolute value of every individual pixel x in a given image.
      * 
      * <pre>f(x) = |x| </pre>
+     * 
+     * Deprecated: Use absolute() instead.
      */
+    @Deprecated
     default boolean absoluteInplace(ClearCLBuffer source_destination) {
+        System.out.println("absoluteInplace is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("AbsoluteInplace");}
         boolean result = AbsoluteInplace.absoluteInplace(getCLIJx(), source_destination);
         if (doTimeTracing()) {recordMethodEnd("AbsoluteInplace");}
@@ -902,8 +929,12 @@ public abstract interface CLIJxOps {
      * Erodes a binary image until just its skeleton is left. 
      * 
      * The result is similar to Skeletonize3D in Fiji.
+     * 
+     * Deprecated: Use SimpleITK binaryThinning() instead.
      */
+    @Deprecated
     default boolean skeletonize(ClearCLBuffer source, ClearCLBuffer destination) {
+        System.out.println("skeletonize is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("Skeletonize");}
         boolean result = Skeletonize.skeletonize(getCLIJ2(), source, destination);
         if (doTimeTracing()) {recordMethodEnd("Skeletonize");}
@@ -1255,8 +1286,12 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Applies a bilateral filter using a box neighborhood with sigma weights for space and intensity to the input image.
+     * 
+     * Deprecated: Use SimpleITK bilateral() instead.
      */
+    @Deprecated
     default boolean bilateral(ClearCLBuffer arg1, ClearCLBuffer arg2, double arg3, double arg4, double arg5, double arg6, double arg7) {
+        System.out.println("bilateral is deprecated. Check the documentation for a replacement. https://clij.github.io/clij2-doccs/reference");
         if (doTimeTracing()) {recordMethodStart("Bilateral");}
         boolean result = Bilateral.bilateral(getCLIJ2(), arg1, arg2, new Double (arg3).intValue(), new Double (arg4).intValue(), new Double (arg5).intValue(), new Double (arg6).floatValue(), new Double (arg7).floatValue());
         if (doTimeTracing()) {recordMethodEnd("Bilateral");}
@@ -1487,6 +1522,8 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Applies Gaussian blur to the input image and subtracts the result from the original image.
+     * 
+     * Deprecated: Use differenceOfGaussian() instead.
      */
     default boolean subtractGaussianBackground(ClearCLImageInterface arg1, ClearCLImageInterface arg2, double arg3, double arg4, double arg5) {
         if (doTimeTracing()) {recordMethodStart("SubtractGaussianBackground");}
@@ -2039,6 +2076,7 @@ public abstract interface CLIJxOps {
     //----------------------------------------------------
     /**
      * Inspired by Grayscale attribute filtering from MorpholibJ library by David Legland & Ignacio Arganda-Carreras.
+     * 
      * This plugin will remove components in a grayscale image based on user-specified area (for 2D: pixels) or volume (3D: voxels).
      * For each gray level specified in the number of bins, binary images will be generated, followed by exclusion of objects (labels)
      * below a minimum pixel count.
@@ -2066,5 +2104,140 @@ public abstract interface CLIJxOps {
         return result;
     }
 
+
+    // net.haesleinhuepf.clijx.weka.BinaryWekaPixelClassifier
+    //----------------------------------------------------
+    /**
+     * Applies a pre-trained CLIJx-Weka model to a 2D image. 
+     * 
+     * You can train your own model using menu Plugins > Segmentation > CLIJx Binary Weka Pixel ClassifierMake sure that the handed over feature list is the same used while training the model.
+     */
+    default boolean binaryWekaPixelClassifier(ClearCLBuffer input, ClearCLBuffer destination, String features, String modelfilename) {
+        if (doTimeTracing()) {recordMethodStart("BinaryWekaPixelClassifier");}
+        boolean result = BinaryWekaPixelClassifier.binaryWekaPixelClassifier(getCLIJ2(), input, destination, features, modelfilename);
+        if (doTimeTracing()) {recordMethodEnd("BinaryWekaPixelClassifier");}
+        return result;
+    }
+
+
+    // net.haesleinhuepf.clijx.weka.WekaLabelClassifier
+    //----------------------------------------------------
+    /**
+     * Applies a pre-trained CLIJx-Weka model to an image and a corresponding label map. 
+     * 
+     * Make sure that the handed over feature list is the same used while training the model.
+     */
+    default boolean wekaLabelClassifier(ClearCLBuffer input, ClearCLBuffer label_map, ClearCLBuffer destination, String features, String modelfilename) {
+        if (doTimeTracing()) {recordMethodStart("WekaLabelClassifier");}
+        boolean result = WekaLabelClassifier.wekaLabelClassifier(getCLIJ2(), input, label_map, destination, features, modelfilename);
+        if (doTimeTracing()) {recordMethodEnd("WekaLabelClassifier");}
+        return result;
+    }
+
+
+    // net.haesleinhuepf.clijx.weka.GenerateLabelFeatureImage
+    //----------------------------------------------------
+    /**
+     * Generates a feature image for Trainable Weka Segmentation. 
+     * 
+     * Use this terminology to specify which features should be generated:
+     * * BOUNDING_BOX_DEPTH
+     * * BOUNDING_BOX_WIDTH
+     * * BOUNDING_BOX_HEIGHT
+     * * CENTROID_X
+     * * CENTROID_Y
+     * * CENTROID_Z
+     * * MASS_CENTER_X
+     * * MASS_CENTER_Y
+     * * MASS_CENTER_Z
+     * * MAX_DISTANCE_TO_CENTROID
+     * * MAX_DISTANCE_TO_MASS_CENTER
+     * * MEAN_DISTANCE_TO_CENTROID
+     * * MEAN_DISTANCE_TO_MASS_CENTER
+     * * MAX_MEAN_DISTANCE_TO_CENTROID_RATIO
+     * * MAX_MEAN_DISTANCE_TO_MASS_CENTER_RATIO
+     * * MAXIMUM_INTENSITY
+     * * MEAN_INTENSITY
+     * * MINIMUM_INTENSITY
+     * * SUM_INTENSITY
+     * * STANDARD_DEVIATION_INTENSITY
+     * * PIXEL_COUNT
+     * * local_mean_average_distance_of_touching_neighbors
+     * * local_maximum_average_distance_of_touching_neighbors
+     * * count_touching_neighbors
+     * * local_minimum_average_distance_of_touching_neighbors
+     * * average_touch_pixel_count
+     * * local_minimum_count_touching_neighbors
+     * * average_distance_n_closest_neighbors
+     * * average_distance_of_touching_neighbors
+     * * local_mean_count_touching_neighbors
+     * * local_mean_average_distance_n_closest_neighbors
+     * * local_maximum_average_distance_n_closest_neighbors
+     * * local_standard_deviation_average_distance_of_touching_neighbors
+     * * local_maximum_count_touching_neighbors
+     * * local_standard_deviation_count_touching_neighbors
+     * * local_standard_deviation_average_distance_n_closest_neighbors
+     * * local_minimum_average_distance_n_closest_neighbors
+     * 
+     * Example: "MEAN_INTENSITY count_touching_neighbors"
+     */
+    default boolean generateLabelFeatureImage(ClearCLBuffer input, ClearCLBuffer label_map, ClearCLBuffer label_feature_image_destination, String feature_definitions) {
+        if (doTimeTracing()) {recordMethodStart("GenerateLabelFeatureImage");}
+        boolean result = GenerateLabelFeatureImage.generateLabelFeatureImage(getCLIJ2(), input, label_map, label_feature_image_destination, feature_definitions);
+        if (doTimeTracing()) {recordMethodEnd("GenerateLabelFeatureImage");}
+        return result;
+    }
+
+    /**
+     * Generates a feature image for Trainable Weka Segmentation. 
+     * 
+     * Use this terminology to specify which features should be generated:
+     * * BOUNDING_BOX_DEPTH
+     * * BOUNDING_BOX_WIDTH
+     * * BOUNDING_BOX_HEIGHT
+     * * CENTROID_X
+     * * CENTROID_Y
+     * * CENTROID_Z
+     * * MASS_CENTER_X
+     * * MASS_CENTER_Y
+     * * MASS_CENTER_Z
+     * * MAX_DISTANCE_TO_CENTROID
+     * * MAX_DISTANCE_TO_MASS_CENTER
+     * * MEAN_DISTANCE_TO_CENTROID
+     * * MEAN_DISTANCE_TO_MASS_CENTER
+     * * MAX_MEAN_DISTANCE_TO_CENTROID_RATIO
+     * * MAX_MEAN_DISTANCE_TO_MASS_CENTER_RATIO
+     * * MAXIMUM_INTENSITY
+     * * MEAN_INTENSITY
+     * * MINIMUM_INTENSITY
+     * * SUM_INTENSITY
+     * * STANDARD_DEVIATION_INTENSITY
+     * * PIXEL_COUNT
+     * * local_mean_average_distance_of_touching_neighbors
+     * * local_maximum_average_distance_of_touching_neighbors
+     * * count_touching_neighbors
+     * * local_minimum_average_distance_of_touching_neighbors
+     * * average_touch_pixel_count
+     * * local_minimum_count_touching_neighbors
+     * * average_distance_n_closest_neighbors
+     * * average_distance_of_touching_neighbors
+     * * local_mean_count_touching_neighbors
+     * * local_mean_average_distance_n_closest_neighbors
+     * * local_maximum_average_distance_n_closest_neighbors
+     * * local_standard_deviation_average_distance_of_touching_neighbors
+     * * local_maximum_count_touching_neighbors
+     * * local_standard_deviation_count_touching_neighbors
+     * * local_standard_deviation_average_distance_n_closest_neighbors
+     * * local_minimum_average_distance_n_closest_neighbors
+     * 
+     * Example: "MEAN_INTENSITY count_touching_neighbors"
+     */
+    default ClearCLBuffer generateLabelFeatureImage(ClearCLBuffer arg1, ClearCLBuffer arg2, String arg3) {
+        if (doTimeTracing()) {recordMethodStart("GenerateLabelFeatureImage");}
+        ClearCLBuffer result = GenerateLabelFeatureImage.generateLabelFeatureImage(getCLIJ2(), arg1, arg2, arg3);
+        if (doTimeTracing()) {recordMethodEnd("GenerateLabelFeatureImage");}
+        return result;
+    }
+
 }
-// 139 methods generated.
+// 143 methods generated.
