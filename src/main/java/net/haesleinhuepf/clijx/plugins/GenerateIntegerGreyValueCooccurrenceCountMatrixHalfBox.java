@@ -22,11 +22,11 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
 
     @Override
     public boolean executeCL() {
-        boolean result = generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(getCLIJ2(), (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+        boolean result = generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(getCLIJ2(), (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (int)(args[2]));
         return result;
     }
 
-    public static boolean generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(CLIJ2 clij2, ClearCLBuffer src_label_map1, ClearCLBuffer dst_cooccurrence_matrix) {
+    public static boolean generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(CLIJ2 clij2, ClearCLBuffer src_label_map1, ClearCLBuffer dst_cooccurrence_matrix, int pixel_distance) {
         int num_threads = (int) src_label_map1.getDepth();
 
         long[][][] counts = new long[num_threads][(int)dst_cooccurrence_matrix.getWidth()][(int)dst_cooccurrence_matrix.getHeight()];
@@ -62,7 +62,7 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
             }
 
 
-            statisticians[i] = new Statistician(counts[i], image_slice, image_next_slice, (int)src_label_map1.getWidth(), (int)src_label_map1.getHeight());
+            statisticians[i] = new Statistician(counts[i], image_slice, image_next_slice, (int)src_label_map1.getWidth(), (int)src_label_map1.getHeight(), (int)pixel_distance);
             threads[i] = new Thread(statisticians[i]);
             threads[i].start();
         }
@@ -107,18 +107,20 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
     private static class Statistician implements Runnable{
         private final int width;
         private final int height;
-
+        private final int pixel_distance;
+        
         long[][] counts;
 
         private float[] image;
         private float[] image_next_slice;
 
-        Statistician(long[][] counts, float[] image, float[] image_next_slice, int width, int height) {
+        Statistician(long[][] counts, float[] image, float[] image_next_slice, int width, int height, int pixel_distance) {
             this.counts = counts;
             this.image = image;
             this.image_next_slice = image_next_slice;
             this.width = width;
             this.height = height;
+            this.pixel_distance = pixel_distance;
         }
 
         @Override
@@ -126,32 +128,32 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
 
             int x = 0;
             int y = 0;
-            for (int i = 0; i < image.length; i++) {
+            for (int i = 0; i < image.length - pixel_distance; i++) {
                 int value_1 = (int) image[i];
                 int value_2;
 
                 // right
-                if (x < width - 1) {
-                    value_2 = (int) image[i + 1];
+                if (x < width - pixel_distance) {
+                    value_2 = (int) image[i + pixel_distance];
                     counts[value_1][value_2]++;
                     counts[value_2][value_1]++;
                }
                 // bottom
-                if (y < height - 1) {
-                    value_2 = (int) image[i + width];
+                if (y < height - pixel_distance) {
+                    value_2 = (int) image[i + (width * pixel_distance)];
                     counts[value_1][value_2]++;
                     counts[value_2][value_1]++;
                 }
                 // bottom, right
-                if (x < width - 1 && y < height - 1) {
-                    value_2 = (int) image[i + width + 1];
+                if (x < width - pixel_distance && y < height - pixel_distance) {
+                    value_2 = (int) image[i + (width * pixel_distance) + pixel_distance];
                     counts[value_1][value_2]++;
                     counts[value_2][value_1]++;
                 }
 
                 // top, right
-                if (y > 0 && x < width - 1) {
-                    value_2 = (int) image[i - width + 1];
+                if (y > pixel_distance && x < (width * pixel_distance) - pixel_distance) {
+                    value_2 = (int) image[i - (width * pixel_distance) + pixel_distance];
                     counts[value_1][value_2]++;
                     counts[value_2][value_1]++;
                 }
@@ -160,12 +162,12 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
                 if (image_next_slice != null) {
                     for (int delta_x = -1; delta_x <= 1; delta_x ++) {
                         for (int delta_y = -1; delta_y <= 1; delta_y ++) {
-                            int index = i + delta_x + width * delta_y;
-                            if (x + delta_x < width &&
+                            int index = i + delta_x + width * pixel_distance * delta_y;
+                            if (x + delta_x < width * pixel_distance &&
                                 x - delta_x >= 0 &&
-                                y + delta_y < height &&
+                                y + delta_y < height * pixel_distance &&
                                 y - delta_y >= 0 &&
-                                index >= 0 && index < image_next_slice.length) {
+                                index >= 0 && index < image_next_slice.length - pixel_distance) {
                                 value_2 = (int) image_next_slice[index];
                                 counts[value_1][value_2]++;
                                 counts[value_2][value_1]++;
@@ -175,7 +177,7 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
                 }
 
                 x++;
-                if (x >= width) {
+                if (x >= width - pixel_distance) {
                     x = 0;
                     y++;
                 }
@@ -221,7 +223,7 @@ public class GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox extends Abst
 
         ClearCLBuffer matrix = clij2.create(3, 3);
 
-        GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(clij2, buffer, matrix);
+        GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(clij2, buffer, matrix, 0);
 
         clij2.print(matrix);
     }

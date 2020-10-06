@@ -1981,9 +1981,9 @@ public abstract interface CLIJxOps {
      * 
      * Major parts of this operation run on the CPU.
      */
-    default boolean generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(ClearCLBuffer integer_image, ClearCLBuffer grey_value_cooccurrence_matrix_destination) {
+    default boolean generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(ClearCLBuffer integer_image, ClearCLBuffer grey_value_cooccurrence_matrix_destination, double arg1) {
         if (doTimeTracing()) {recordMethodStart("GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox");}
-        boolean result = GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(getCLIJ2(), integer_image, grey_value_cooccurrence_matrix_destination);
+        boolean result = GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(getCLIJ2(), integer_image, grey_value_cooccurrence_matrix_destination, new Double (arg1).intValue());
         if (doTimeTracing()) {recordMethodEnd("GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox");}
         return result;
     }
@@ -2027,9 +2027,9 @@ public abstract interface CLIJxOps {
      * Pixels with intensity above the maximimum of the given range are treated analogously.
      * The resulting co-occurrence matrix contains probability values between 0 and 1.
      */
-    default boolean generateGreyValueCooccurrenceMatrixBox(ClearCLBuffer arg1, ClearCLBuffer arg2, double arg3, double arg4) {
+    default boolean generateGreyValueCooccurrenceMatrixBox(ClearCLBuffer arg1, ClearCLBuffer arg2, double arg3, double arg4, double arg5) {
         if (doTimeTracing()) {recordMethodStart("GenerateGreyValueCooccurrenceMatrixBox");}
-        boolean result = GenerateGreyValueCooccurrenceMatrixBox.generateGreyValueCooccurrenceMatrixBox(getCLIJ2(), arg1, arg2, new Double (arg3).floatValue(), new Double (arg4).floatValue());
+        boolean result = GenerateGreyValueCooccurrenceMatrixBox.generateGreyValueCooccurrenceMatrixBox(getCLIJ2(), arg1, arg2, new Double (arg3).floatValue(), new Double (arg4).floatValue(), new Double (arg5).intValue());
         if (doTimeTracing()) {recordMethodEnd("GenerateGreyValueCooccurrenceMatrixBox");}
         return result;
     }
