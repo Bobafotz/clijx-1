@@ -26,7 +26,7 @@ public class GenerateGreyValueCooccurrenceMatrixBox extends AbstractCLIJ2Plugin 
         return result;
     }
 
-    public static boolean generateGreyValueCooccurrenceMatrixBox(CLIJ2 clij2, ClearCLBuffer src, ClearCLBuffer dst_cooccurrence_matrix, Float minimum_intensity, Float maximum_intensity, int pixel_distance) {
+    public static boolean generateGreyValueCooccurrenceMatrixBox(CLIJ2 clij2, ClearCLBuffer src, ClearCLBuffer dst_cooccurrence_matrix, Float minimum_intensity, Float maximum_intensity, int radius) {
         ClearCLBuffer flip = clij2.create(src.getDimensions(), NativeTypeEnum.Float);
         ClearCLBuffer flop = clij2.create(src.getDimensions(), NativeTypeEnum.Float);
        
@@ -37,7 +37,7 @@ public class GenerateGreyValueCooccurrenceMatrixBox extends AbstractCLIJ2Plugin 
 
         ClearCLBuffer temp_matrix = clij2.create(dst_cooccurrence_matrix.getDimensions(), NativeTypeEnum.Float);
 
-        GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(clij2, flip, temp_matrix, pixel_distance);
+        GenerateIntegerGreyValueCooccurrenceCountMatrixHalfBox.generateIntegerGreyValueCooccurrenceCountMatrixHalfBox(clij2, flip, temp_matrix, radius);
         double sum = clij2.sumOfAllPixels(temp_matrix);
 
         clij2.multiplyImageAndScalar(temp_matrix, dst_cooccurrence_matrix, 1.0 / sum);
@@ -50,7 +50,7 @@ public class GenerateGreyValueCooccurrenceMatrixBox extends AbstractCLIJ2Plugin 
 
     @Override
     public String getParameterHelpText() {
-        return "Image integer_image, ByRef Image grey_value_cooccurrence_matrix_destination, Number min_grey_value, Number max_grey_value, Number pixel_distance";
+        return "Image integer_image, ByRef Image grey_value_cooccurrence_matrix_destination, Number min_grey_value, Number max_grey_value, Number radius";
     }
 
 
